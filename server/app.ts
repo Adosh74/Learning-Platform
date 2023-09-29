@@ -1,8 +1,9 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import express, { NextFunction, Request, Response, request } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { ErrorMiddleware } from './middleware/error';
+import routes from './routes/index.route';
 import ErrorHandler from './utils/ErrorHandler';
 
 dotenv.config({ path: './.env' });
@@ -26,7 +27,10 @@ app.get('/xyz', (_req: Request, res: Response) => {
 	});
 });
 
-app.all('*', (req: Request, res: Response, next: NextFunction) => {
+// routes
+app.use('/api/v1', routes);
+
+app.all('*', (req: Request, _res: Response, next: NextFunction) => {
 	const err: any = new ErrorHandler(
 		`Can't find ${req.originalUrl} on this server!`,
 		404
