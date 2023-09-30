@@ -5,8 +5,10 @@ import path from 'path';
 import User, { IUser } from '../models/user.model';
 import ErrorHandler from '../utils/ErrorHandler';
 import { catchAsync } from '../utils/catchAsyncError';
+import { sendToken } from '../utils/jwt';
 import sendMail from '../utils/mail';
 
+////* Registration *////
 interface IRegistrationBody {
 	name: string;
 	email: string;
@@ -75,7 +77,7 @@ const createActivationToken = (user: IRegistrationBody): IActivationToken => {
 		{ user, activationCode },
 		process.env.ACTIVATION_SECRET as Secret,
 		{
-			expiresIn: '10m',
+			expiresIn: `${process.env.ACTIVATION_TOKEN_EXPIRES_IN}`,
 		}
 	);
 
@@ -114,7 +116,7 @@ export const activateUser = catchAsync(
 			}
 
 			// 6. save user to database
-			const user = await User.create({ name, email, password });
+			await User.create({ name, email, password });
 
 			res.status(201).json({
 				success: true,
@@ -123,5 +125,48 @@ export const activateUser = catchAsync(
 		} catch (error: any) {
 			return next(new ErrorHandler(error.message, 400));
 		}
+	}
+);
+
+////* Login *////
+interface ILoginRequest {
+	email: string;
+	password: string;
+}
+
+export const login = catchAsync(
+	async (req: Request, res: Response, next: NextFunction) => {
+		// 1. destructure req.body and check if fields are not empty
+		const { email, password }: ILoginRequest = req.body as ILoginRequest;
+		if (!email || !password) {
+			return next(new ErrorHandler('Please enter email and password', 400));
+		}
+
+		// 2. check if email and password are correct
+		const user: IUser = await User.findOne({ email }).select('+password');
+
+		if (!user || !(await user.comparePassword(password))) {
+			return next(new ErrorHandler('Invalid email or password', 401));
+		}
+
+		// 3. check if user is activated
+		// if (!user.isVerified) {
+		// 	return next(new ErrorHandler('Please activate your account', 401));
+		// }
+
+		// 4. create access token and send to client
+		sendToken(user, 200, res);
+	}
+);
+
+export const logout = catchAsync(
+	async (req: Request, res: Response, next: NextFunction) => {
+		res.cookie('access_token', '', { maxAge: 1 });
+		res.cookie('refresh_token', '', { maxAge: 1 });
+
+		res.status(200).json({
+			success: true,
+			message: 'Logged out successfully',
+		});
 	}
 );
