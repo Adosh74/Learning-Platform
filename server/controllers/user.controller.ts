@@ -2,9 +2,9 @@ import ejs from 'ejs';
 import { NextFunction, Request, Response } from 'express';
 import jwt, { Secret } from 'jsonwebtoken';
 import path from 'path';
-import { catchAsync } from '../middleware/catchAsyncError';
 import User, { IUser } from '../models/user.model';
 import ErrorHandler from '../utils/ErrorHandler';
+import { catchAsync } from '../utils/catchAsyncError';
 import sendMail from '../utils/mail';
 
 interface IRegistrationBody {
