@@ -8,6 +8,7 @@ export interface IUser extends Document {
 	name: string;
 	email: string;
 	password: string;
+	passwordChangedAt: Date;
 	avatar: {
 		public_id: string;
 	};
@@ -43,6 +44,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
 			minlength: [6, 'Password must be at least 6 characters'],
 			select: false,
 		},
+		passwordChangedAt: Date,
 		avatar: {
 			public_id: String,
 			url: String,
@@ -74,6 +76,16 @@ userSchema.pre<IUser>('save', async function (next) {
 	}
 
 	this.password = await bcrypt.hash(this.password, 10);
+	next();
+});
+
+// Update passwordChangedAt property for the user
+userSchema.pre<IUser>('save', function (next) {
+	if (!this.isModified('password') || this.isNew) {
+		return next();
+	}
+
+	this.passwordChangedAt = new Date(Date.now() - 1000);
 	next();
 });
 
