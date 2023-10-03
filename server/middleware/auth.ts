@@ -57,3 +57,19 @@ export const isAuthenticated = catchAsync(
 		next();
 	}
 );
+
+/// *** Authorization Role *** ///
+
+export const authorizeRoles = (...roles: string[]) => {
+	return (req: Request, res: Response, next: NextFunction) => {
+		if (!roles.includes(req.user?.role || '')) {
+			return next(
+				new ErrorHandler(
+					`(${req.user?.role}) do not have permission to perform this action`,
+					403
+				)
+			);
+		}
+		next();
+	};
+};
