@@ -7,6 +7,7 @@ import ErrorHandler from '../utils/ErrorHandler';
 import { catchAsync } from '../utils/catchAsyncError';
 import { sendToken } from '../utils/jwt';
 import sendMail from '../utils/mail';
+import { redis } from '../utils/redis';
 
 ////* Registration *////
 interface IRegistrationBody {
@@ -163,6 +164,9 @@ export const logout = catchAsync(
 	async (req: Request, res: Response, next: NextFunction) => {
 		res.cookie('access_token', '', { maxAge: 1 });
 		res.cookie('refresh_token', '', { maxAge: 1 });
+		const userId = req.user?._id || '';
+
+		redis.del(userId);
 
 		res.status(200).json({
 			success: true,

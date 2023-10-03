@@ -5,6 +5,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export interface IUser extends Document {
+	_id: string;
 	name: string;
 	email: string;
 	password: string;
@@ -18,6 +19,7 @@ export interface IUser extends Document {
 	comparePassword: (password: string) => Promise<boolean>;
 	SignAccessToken: () => string;
 	SignRefreshToken: () => string;
+	changedPasswordAfter: (JWTTimestamp: number) => boolean;
 }
 
 const userSchema: Schema<IUser> = new mongoose.Schema(
@@ -97,6 +99,18 @@ userSchema.methods.SignAccessToken = function (): string {
 // Sign refresh token
 userSchema.methods.SignRefreshToken = function (): string {
 	return jwt.sign({ id: this._id }, process.env.REFRESH_TOKEN_SECRET as Secret);
+};
+
+// Check if user changed password after the token was issued
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp: number) {
+	if (this.passwordChangedAt) {
+		const time = `${this.passwordChangedAt.getTime() / 1000}`;
+		const changedTimestamp = parseInt(time, 10);
+
+		return JWTTimestamp < changedTimestamp;
+	}
+
+	return false;
 };
 
 // Compare user password with hashed password in database
