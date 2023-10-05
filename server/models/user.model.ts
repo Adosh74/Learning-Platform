@@ -93,12 +93,16 @@ userSchema.pre<IUser>('save', function (next) {
 
 // Sign access token
 userSchema.methods.SignAccessToken = function (): string {
-	return jwt.sign({ id: this._id }, process.env.ACCESS_TOKEN_SECRET as Secret);
+	return jwt.sign({ id: this._id }, process.env.ACCESS_TOKEN_SECRET as Secret, {
+		expiresIn: `${process.env.ACCESS_TOKEN_EXPIRES_IN}m`,
+	});
 };
 
 // Sign refresh token
 userSchema.methods.SignRefreshToken = function (): string {
-	return jwt.sign({ id: this._id }, process.env.REFRESH_TOKEN_SECRET as Secret);
+	return jwt.sign({ id: this._id }, process.env.REFRESH_TOKEN_SECRET as Secret, {
+		expiresIn: '3d',
+	});
 };
 
 // Check if user changed password after the token was issued
