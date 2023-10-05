@@ -14,7 +14,10 @@ module.exports = {
 
 	plugins: ['@typescript-eslint', 'prettier'],
 	rules: {
-		'prettier/prettier': ['warn', { endOfLine: 'auto' }],
+		'prettier/prettier': [
+			'warn',
+			{ endOfLine: 'auto', singleQuote: true, parser: 'flow' },
+		],
 		'no-var': 'error',
 		'@typescript-eslint/no-explicit-any': 'off',
 		'@typescript-eslint/no-unused-vars': 'warn',
