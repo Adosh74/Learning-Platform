@@ -7,6 +7,8 @@ export const ErrorMiddleware = (
 	res: Response,
 	next: NextFunction
 ) => {
+	err.statusCode = err.statusCode || 500;
+	err.message = err.message || 'Internal Server Error';
 	if (process.env.NODE_ENV === 'development') {
 		return res.status(err.statusCode).json({
 			status: err.status,
@@ -15,8 +17,6 @@ export const ErrorMiddleware = (
 			stack: err.stack,
 		});
 	}
-	err.statusCode = err.statusCode || 500;
-	err.message = err.message || 'Internal Server Error';
 
 	// wrong mongoose object id error
 	if (err.name === 'CastError') {
