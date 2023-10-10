@@ -225,3 +225,21 @@ export const updateAccessToken = catchAsync(
 		});
 	}
 );
+
+interface ISocialBody {
+	name: string;
+	email: string;
+	avatar: string;
+}
+// *** Social auth *** //
+export const socialAuth = catchAsync(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const { email, name, avatar }: ISocialBody = req.body as ISocialBody;
+		const user: IUser = (await User.findOne({ email })) as IUser;
+		if (!user) {
+			const newUser = await User.create({ name, email, avatar });
+			sendToken(newUser, 201, res);
+		}
+		sendToken(user, 200, res);
+	}
+);
