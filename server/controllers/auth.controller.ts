@@ -152,6 +152,7 @@ export const login = catchAsync(
 		}
 
 		// 3. check if user is activated
+
 		// if (!user.isVerified) {
 		// 	return next(new ErrorHandler('Please activate your account', 401));
 		// }
