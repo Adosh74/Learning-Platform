@@ -247,3 +247,19 @@ export const socialAuth = catchAsync(
 		sendToken(user, 200, res);
 	}
 );
+
+interface IUpdatePassword {
+	currentPassword: string;
+	newPassword: string;
+}
+
+// *** Update password *** //
+export const updatePassword = catchAsync(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const { currentPassword, newPassword }: IUpdatePassword = req.body as IUpdatePassword;
+
+		if(!currentPassword || !newPassword) {
+			return next(new ErrorHandler('Please enter current and new password', 400))
+		}
+	}
+);
