@@ -9,6 +9,7 @@ router.post('/register', authControllers.register);
 router.post('/activate-user', authControllers.activateUser);
 router.post('/login', authControllers.login);
 router.get('/logout', isAuthenticated, authControllers.logout);
+router.patch('/update-password', isAuthenticated, authControllers.updatePassword);
 
 router.get('/refresh', authControllers.updateAccessToken);
 router.get('/me', isAuthenticated, userControllers.getMe);
