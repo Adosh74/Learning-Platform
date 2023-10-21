@@ -12,6 +12,7 @@ export interface IUser extends Document {
 	passwordChangedAt: Date;
 	avatar: {
 		public_id: string;
+		url: string;
 	};
 	role: string;
 	isVerified: boolean;
