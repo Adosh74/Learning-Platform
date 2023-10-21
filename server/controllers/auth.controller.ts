@@ -256,10 +256,23 @@ interface IUpdatePassword {
 // *** Update password *** //
 export const updatePassword = catchAsync(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const { currentPassword, newPassword }: IUpdatePassword = req.body as IUpdatePassword;
+		const { currentPassword, newPassword }: IUpdatePassword =
+			req.body as IUpdatePassword;
 
-		if(!currentPassword || !newPassword) {
-			return next(new ErrorHandler('Please enter current and new password', 400))
+		if (!currentPassword || !newPassword) {
+			return next(new ErrorHandler('Please enter current and new password', 400));
 		}
+
+		const user: IUser = await User.findById(req.user?._id).select('+password');
+
+		if (!(await user.comparePassword(currentPassword))) {
+			return next(new ErrorHandler('Current password is incorrect', 401));
+		}
+
+		user.password = newPassword;
+		user.save();
+
+		redis.set(user._id.toString(), JSON.stringify(user));
+		sendToken(user, 200, res);
 	}
 );
