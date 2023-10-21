@@ -15,5 +15,10 @@ router.get('/refresh', authControllers.updateAccessToken);
 router.get('/me', isAuthenticated, userControllers.getMe);
 router.post('/social-auth', authControllers.socialAuth);
 router.patch('/update-user-info', isAuthenticated, userControllers.updateUserInfo);
+router.patch(
+	'/update-profile-picture',
+	isAuthenticated,
+	userControllers.updateProfilePicture
+);
 
 export default router;
