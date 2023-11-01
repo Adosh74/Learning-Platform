@@ -8,4 +8,8 @@ router
 	.route('/')
 	.post(isAuthenticated, authorizeRoles('admin'), courseController.uploadCourse);
 
+router
+	.route('/:id')
+	.put(isAuthenticated, authorizeRoles('admin'), courseController.updateCourse);
+
 export default router;
