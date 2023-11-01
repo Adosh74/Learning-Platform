@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.use(cors({ origin: [`${process.env.ORIGIN}`] }));
 
 // test apis
-app.get('/xyz', (_req: Request, res: Response) => {
+app.get('/healthz', (_req: Request, res: Response) => {
 	res.status(200).json({
 		success: true,
 		message: 'SERVER WORKING!',
