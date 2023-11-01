@@ -270,7 +270,7 @@ export const updatePassword = catchAsync(
 		}
 
 		user.password = newPassword;
-		user.save();
+		await user.save();
 
 		redis.set(user._id.toString(), JSON.stringify(user));
 		sendToken(user, 200, res);
