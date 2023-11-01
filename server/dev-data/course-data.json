@@ -1,0 +1,46 @@
+{
+	"name": "React",
+	"description": "React is a JavaScript library for building user interfaces.",
+	"price": 100,
+	"estimatedPrice": 120,
+	"tags": "react, javascript, frontend",
+	"level": "beginner",
+	"demoUrl": "https://www.youtube.com/watch?v=4UZrsTqkcW4",
+	"benefits": [
+		{
+			"title": "Learn React from scratch"
+		},
+		{
+			"title": "Learn React Hooks"
+		},
+		{
+			"title": "Learn React Router"
+		}
+	],
+	"prerequisites": [
+		{
+			"title": "HTML & CSS"
+		},
+		{
+			"title": "JavaScript"
+		},
+		{
+			"title": "ES6"
+		}
+	],
+	"courseData": [
+		{
+			"title": "Introduction",
+			"description": "Introduction to React",
+			"videoUrl": "https://www.youtube.com/watch?v=4UZrsTqkcW4",
+			"videoSection": "Planning the App",
+			"videoLength": 12,
+			"links": [
+				{
+					"title": "React Docs",
+					"url": "https://reactjs.org/docs/getting-started.html"
+				}
+			]
+		}
+	]
+}
